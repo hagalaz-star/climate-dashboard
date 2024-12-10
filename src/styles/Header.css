@@ -1,0 +1,48 @@
+.header {
+  display: flex;
+  align-items: center;
+  padding: 20px;
+  width: 100%;
+  max-width: 1200px; /* 전체 너비 제한 */
+  margin: 0 auto; /* 중앙 정렬 */
+}
+
+.logo-link {
+  flex-shrink: 0; /* 로고 크기 유지 */
+  margin-right: 50px; /* 로고와 메뉴 사이 간격 증가 */
+}
+
+.header_container {
+  flex-grow: 1; /* 남은 공간 차지 */
+  display: flex;
+  justify-content: center;
+}
+
+.header_menu {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 60px; /* 메뉴 항목 사이 간격 크게 증가 */
+}
+
+.header_menu-link {
+  text-decoration: none;
+  color: #4d4d4d;
+  font-weight: 600;
+  padding: 10px 25px; /* 패딩 증가 */
+  font-size: 16px; /* 글자 크기 조정 */
+  transition: all 0.3s ease;
+}
+
+/* 활성 링크 스타일 */
+.header_menu-link.active {
+  font-weight: bold;
+  text-decoration: underline;
+  color: #161616;
+}
+
+/* 호버 효과 */
+.header_menu-link:hover {
+  color: #161616;
+  transform: translateY(-2px);
+}

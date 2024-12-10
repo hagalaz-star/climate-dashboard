@@ -1,0 +1,172 @@
+/* Home.css */
+.home-container {
+  flex: 1; /* 추가 */
+  display: flex; /* 추가 */
+  flex-direction: column; /* 추가 */
+  background-color: #ffffff;
+  margin: 0;
+  padding: 0;
+  position: relative;
+}
+/* Hero Section */
+.hero-section {
+  padding: 40px 20px; /* 패딩 감소 */
+  text-align: center;
+  background: linear-gradient(
+    135deg,
+    rgba(240, 244, 248, 0.95) 0%,
+    rgba(255, 255, 255, 0.95) 100%
+  );
+  border-bottom: 1px solid #eaeaea;
+}
+
+.hero-section h1 {
+  font-size: clamp(2rem, 4vw, 3rem); /* 폰트 크기 감소 */
+  margin-bottom: 15px;
+}
+.subtitle {
+  font-size: clamp(1rem, 1.5vw, 1.2rem); /* 폰트 크기 감소 */
+  margin-bottom: 20px;
+}
+/* Info Section */
+
+.info-section {
+  padding: 30px 20px; /* 패딩 감소 */
+}
+
+.info-content {
+  text-align: center;
+}
+
+.info-content h2 {
+  font-size: clamp(2rem, 3vw, 2.5rem);
+  color: #1a1a1a;
+  margin-bottom: 25px;
+  font-weight: 700;
+}
+
+.info-content > p {
+  font-size: 1.2rem;
+  color: #666;
+  max-width: 800px;
+  margin: 0 auto 60px;
+  line-height: 1.8;
+}
+
+/* Features Grid */
+.features {
+  display: grid;
+  grid-template-columns: repeat(
+    auto-fit,
+    minmax(250px, 1fr)
+  ); /* 300px에서 250px로 줄임 */
+  gap: 20px; /* 30px에서 25px로 줄임 */
+  padding: 15px;
+  margin: 0 auto;
+  max-width: 1200px;
+}
+
+.feature-item {
+  background: #ffffff;
+  border-radius: 20px;
+  padding: 25px 20px; /* 40px 30px에서 30px 25px로 줄임 */
+  text-decoration: none;
+  color: inherit;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  border: 1px solid #eaeaea;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  min-height: 180px; /* 280px에서 200px로 줄임 */
+}
+
+.feature-item h3 {
+  font-size: 1.3rem; /* 1.5rem에서 1.3rem으로 줄임 */
+  color: #1a1a1a;
+  margin: 10px 0; /* 20px에서 15px로 줄임 */
+  font-weight: 600;
+}
+
+.feature-item p {
+  font-size: 1rem; /* 1.1rem에서 1rem으로 줄임 */
+  color: #666;
+  line-height: 1.4;
+  margin: 0;
+}
+
+/* Hero Section의 패딩도 조절 */
+.hero-section {
+  position: relative;
+  padding: 80px 20px; /* 120px에서 80px로 줄임 */
+  text-align: center;
+  background: linear-gradient(
+    135deg,
+    rgba(240, 244, 248, 0.95) 0%,
+    rgba(255, 255, 255, 0.95) 100%
+  );
+  border-bottom: 1px solid #eaeaea;
+}
+
+.info-section {
+  padding: 50px 20px; /* 80px에서 50px로 줄임 */
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+/* 반응형 디자인 유지 */
+@media (max-width: 768px) {
+  .hero-section {
+    padding: 60px 20px;
+  }
+
+  .info-section {
+    padding: 40px 20px;
+  }
+
+  .features {
+    grid-template-columns: 1fr;
+    padding: 10px;
+  }
+
+  .feature-item {
+    padding: 25px 20px;
+    min-height: 180px;
+  }
+}
+
+/* Animation */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.hero-section h1,
+.hero-section .subtitle,
+.feature-item {
+  animation: fadeInUp 0.6s ease-out;
+  animation-fill-mode: backwards;
+}
+
+.hero-section .subtitle {
+  animation-delay: 0.2s;
+}
+
+.feature-item:nth-child(1) {
+  animation-delay: 0.4s;
+}
+
+.feature-item:nth-child(2) {
+  animation-delay: 0.6s;
+}
+
+.feature-item:nth-child(3) {
+  animation-delay: 0.8s;
+}
