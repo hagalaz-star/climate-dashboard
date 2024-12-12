@@ -17,6 +17,7 @@
 
 ## 프로젝트 폴더 구조
 
+```plaintext
 src
 ├── api
 │ ├── temperature
@@ -62,3 +63,4 @@ src
 │ └── dataTransformers.ts
 ├── App.tsx
 └── main.tsx
+```
