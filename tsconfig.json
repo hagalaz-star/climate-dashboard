@@ -3,5 +3,12 @@
   "references": [
     { "path": "./tsconfig.app.json" },
     { "path": "./tsconfig.node.json" }
+<<<<<<< HEAD
   ]
+=======
+  ],
+  "compilerOptions": {
+    "types": ["vite/client"]
+  }
+>>>>>>> 5726d96 (update)
 }
