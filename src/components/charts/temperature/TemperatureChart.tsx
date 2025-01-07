@@ -14,10 +14,12 @@ import {
 import {
   TransformedWeatherData,
   formatForRecharts,
+  useWeatherDataQuery,
 } from "../../../hooks/useTemperatureData";
 
 interface TemperatureChartProps {
-  data: TransformedWeatherData;
+  latitude: number;
+  longitude: number;
   timeRange: "hourly" | "daily";
 
   // 어떤 온도 데이터를 보여줄지 선택
@@ -26,6 +28,9 @@ interface TemperatureChartProps {
   showMinTemp?: boolean;
   showFeelsLike?: boolean;
 
+  // 강수량
+  showPrecipitation?: boolean;
+
   // 시각적 옵션들
   height?: number;
   showLegend?: boolean;
@@ -33,40 +38,62 @@ interface TemperatureChartProps {
 }
 // 날씨 데이터를 시각화 하는 컴포넌트
 const TemperatureChart = ({
-  data,
+  latitude,
+  longitude,
   timeRange,
   showCurrentTemp = true,
   showMinTemp = true,
   showMaxTemp = true,
   showFeelsLike = false,
+  showPrecipitation = false,
   height = 400,
   showLegend = true,
   showGrid = true,
 }: TemperatureChartProps) => {
+  const { weatherData, loading, error } = useWeatherDataQuery(
+    latitude,
+    longitude,
+    timeRange
+  );
+
   // 차트에 표시할 데이터 계산
   const chartData = useMemo(() => {
+    if (!weatherData) return [];
     // 표시할 온도 지표들을 배열로 구성
     const metrics = [];
     if (showCurrentTemp) metrics.push("temperatures"); // 기본 온도 데이터
     if (showMaxTemp) metrics.push("maxTemps");
     if (showMinTemp) metrics.push("minTemps");
     if (showFeelsLike) metrics.push("apparentTemps");
+    if (showPrecipitation) metrics.push("precipitation");
 
     // formatForRecharts 함수를 사용하여 Recharts에 맞는 데이터 형식으로 변환
-    return formatForRecharts(data, metrics);
-  }, [data, showCurrentTemp, showMinTemp, showMaxTemp, showFeelsLike]);
+    return formatForRecharts(weatherData, metrics);
+  }, [
+    weatherData,
+    showCurrentTemp,
+    showMinTemp,
+    showMaxTemp,
+    showFeelsLike,
+    showPrecipitation,
+  ]);
 
   // 시간 포맷팅 함수
-  const formatXAxis = (value: string) => {
-    const date = new Date(value);
-    if (timeRange === "hourly") {
-      return `${date.getHours()}:00`;
-    } else {
+  const formatXAxis = useMemo(() => {
+    return (value: string) => {
+      const date = new Date(value);
+      if (timeRange === "hourly") {
+        return `${date.getHours()}:00`;
+      }
       const month = String(date.getMonth() + 1).padStart(2, "0");
       const day = String(date.getDate()).padStart(2, "0");
       return `${month}-${day}`;
-    }
-  };
+    };
+  }, [timeRange]);
+
+  if (loading) return <div>로딩중...</div>;
+  if (error) return <div>에러: {error}</div>;
+  if (!weatherData) return <div>데이터가 없습니다</div>;
 
   return (
     <div className="w-full h-full">
@@ -114,7 +141,7 @@ const TemperatureChart = ({
           {/* 최저 기온 */}
           {showMinTemp && (
             <Line
-              dataKey="minTemp"
+              dataKey="minTemps"
               type="monotone"
               stroke="#82ca9d"
               name="최저 기온"

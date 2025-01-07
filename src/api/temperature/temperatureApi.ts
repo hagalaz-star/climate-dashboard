@@ -13,37 +13,27 @@ const weatherApi = axios.create({
 export const fetchWeatherData = async ({
   latitude,
   longitude,
-  hourly = [...WEATHER_PARAMS.HOURLY_VARIABLES],
-  daily = [...WEATHER_PARAMS.DAILY_VARIABLES],
+  hourly = ["temperature_2m", "apparent_temperature", "precipitation"],
+  daily = ["temperature_2m_max", "temperature_2m_min"],
+  timezone = "Asia/Seoul",
   past_days = 7,
-  models = "auto",
-  cell_selection = "land",
 }: WeatherParam): Promise<WeatherResponse> => {
   try {
     if (!latitude || !longitude) {
-      throw new Error("위도 와 경도 는 필수 파라미터 입니다 !");
+      throw new Error("위도와 경도는 필수 파라미터입니다!");
     }
-    // API 요청 전 파라미터 로깅
-    console.log("API 요청 파라미터:", {
-      latitude,
-      longitude,
-      hourly: Array.isArray(hourly) ? hourly.join(",") : hourly,
-      daily: Array.isArray(daily) ? daily.join(",") : daily,
-      past_days,
-      models,
-      cell_selection,
-    });
+
     const response = await weatherApi.get("", {
       params: {
         latitude,
         longitude,
         hourly: Array.isArray(hourly) ? hourly.join(",") : hourly,
         daily: Array.isArray(daily) ? daily.join(",") : daily,
+        timezone,
         past_days,
-        models,
-        cell_selection,
       },
     });
+    console.log("API 응답 데이터:", response.data); // 디버깅을 위한 로그 추가
     return response.data;
   } catch (error) {
     if (axios.isAxiosError(error)) {

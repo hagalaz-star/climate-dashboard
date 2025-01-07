@@ -37,6 +37,7 @@ export interface WeatherParam {
   longitude: number;
   hourly?: Array<keyof HourlyData>;
   daily?: Array<keyof DailyData>;
+  timezone?: string;
   past_days?: number;
   models?: "auto";
   cell_selection?: "land" | "sea" | string;

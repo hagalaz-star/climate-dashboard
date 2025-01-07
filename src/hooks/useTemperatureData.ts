@@ -8,6 +8,7 @@ import {
   fetchWeatherData,
   fetchHistoricalWeather,
 } from "../api/temperature/temperatureApi";
+import { useState, useEffect } from "react";
 
 interface WeatherQueryParams {
   latitude: number;
@@ -52,10 +53,53 @@ interface WeatherMetadata {
   endTime?: string;
 }
 
-interface TransformedWeatherData {
+export interface TransformedWeatherData {
   measurements: WeatherMeasurements; // data 대신 measurements
   metadata: WeatherMetadata;
 }
+// 커스텀 훅 추가
+export const useWeatherDataQuery = (
+  latitude: number,
+  longitude: number,
+  timeRange: "hourly" | "daily"
+) => {
+  const [weatherData, setWeatherData] = useState<TransformedWeatherData | null>(
+    null
+  );
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        setLoading(true);
+        const data = await fetchCurrentWeatherData({
+          latitude,
+          longitude,
+          timeRange,
+          hourlyParams: [
+            "temperature_2m",
+            "apparent_temperature",
+            "precipitation",
+          ],
+          dailyParams: ["temperature_2m_max", "temperature_2m_min"],
+        });
+        setWeatherData(data);
+      } catch (err) {
+        setError(
+          err instanceof Error
+            ? err.message
+            : "날씨 데이터를 가져오는데 실패했습니다"
+        );
+      } finally {
+        setLoading(false);
+      }
+    }
+    fetchData();
+  }, [latitude, longitude, timeRange]);
+
+  return { weatherData, loading, error };
+};
 
 // 데이터 변환 함수
 const transformToChartData = (
@@ -114,6 +158,7 @@ export const fetchCurrentWeatherData = async (
     past_days: params.past_days,
     models: "auto", // 기본값 설정
     cell_selection: "land", // 기본값 설정
+    timezone: "auto",
   };
   const response = await fetchWeatherData(weatherParams);
   return transformToChartData(response);
@@ -137,30 +182,13 @@ export const fetchHistoricalWeatherData = async (
       past_days: params.past_days,
       models: "auto",
       cell_selection: "land",
+      timezone: "auto",
     }
   );
   return transformToChartData(response);
 };
 
 // Recharts 데이터 포맷 변환 함수
-// export const formatForRecharts = (weatherData: TransformedWeatherData, metrics: string[]) => {
-//   const timeArray = weatherData.measurements.time ||
-//                     weatherData.measurements.dates || [];
-
-//   return timeArray.map((time, index) => {
-//     const dataPoint: Record<string, string | number | undefined> = { time };
-
-//     // 각 측정값에 대해 처리
-//     metrics.forEach(metric => {
-//       const metricData = weatherData.measurements[metric as keyof WeatherMeasurements];
-//       if (Array.isArray(metricData)) {
-//         dataPoint[metric] = metricData[index];
-//       }
-//     });
-
-//     return dataPoint;
-//   });
-// };
 export const formatForRecharts = (
   weatherData: TransformedWeatherData,
   metrics: string[]
